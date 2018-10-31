@@ -3,6 +3,9 @@ version: '2.0'
 services:
   mysql:
     image: mysql:5
+    container_name: mysql
+    networks:
+    - stack
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=bugtracker
@@ -14,6 +17,9 @@ services:
     depends_on:
     - mysql
     image: vimagick/mantisbt:latest
+    container_name: mantisbt
+    networks:
+    - stack
     ports:
       - "8989:80"
     links:
@@ -22,6 +28,9 @@ services:
     
   mariadb:
     image: 'bitnami/mariadb:latest'
+    container_name: mariadb
+    networks:
+    - stack
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
       - MARIADB_USER=bn_testlink
@@ -31,6 +40,9 @@ services:
 
   testlink:
     image: 'bitnami/testlink:latest'
+    container_name: testlink
+    networks:
+    - stack
     ports:
       - '80:80'
       - '443:443'
@@ -38,6 +50,7 @@ services:
       - 'testlink_data:/bitnami'
     depends_on:
       - mariadb
+    
     environment:
       - MARIADB_HOST=mariadb
       - MARIADB_PORT_NUMBER=3306
@@ -53,3 +66,6 @@ volumes:
     driver: local
   testlink_data:
     driver: local
+
+networks: 
+  stack:
