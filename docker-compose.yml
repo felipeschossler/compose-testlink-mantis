@@ -28,6 +28,8 @@ services:
       - MARIADB_DATABASE=bitnami_testlink
     volumes:
       - 'mariadb_data:/bitnami'
+    restart: always
+
   testlink:
     image: 'bitnami/testlink:latest'
     ports:
@@ -49,11 +51,23 @@ services:
       - TESTLINK_USERNAME=admin
       - TESTLINK_PASSWORD=verysecretadminpassword
       - TESTLINK_EMAIL=admin@example.com
+    restart: always
+
+  portainer:
+    image: portainer/portainer
+    ports:
+      - "9000:9000"
+    command: -H unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
 
 volumes:
   mariadb_data:
     driver: local
   testlink_data:
+    driver: local
+  portainer_data:
     driver: local
 
 #First set up mantis with the configurations below.
